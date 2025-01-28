@@ -58,4 +58,4 @@ The goal of this project is to build a predictive model to determine whether a l
 
 
 ## Access the Code
-You can find the complete code and implementation [here](https://github.com/majdfo/Big-Data-Project/blob/main/code.ipynb).
+[code](https://github.com/majdfo/Big-Data-Project/blob/main/code.ipynb).
