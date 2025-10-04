@@ -1,0 +1,43 @@
+name: Upload BloomWatch Bundle
+
+on:
+  push:
+    paths:
+      - 'bloomwatch/**'
+      - '.github/workflows/upload-bloomwatch-bundle.yml'
+  workflow_dispatch:
+
+jobs:
+  build-and-archive:
+    name: Build BloomWatch archive
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Recreate Firebase environment file
+        run: |
+          if [ -n "${{ secrets.VITE_FIREBASE_API_KEY }}" ] && \
+             [ -n "${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}" ] && \
+             [ -n "${{ secrets.VITE_FIREBASE_PROJECT_ID }}" ] && \
+             [ -n "${{ secrets.VITE_FIREBASE_APP_ID }}" ]; then
+            cat <<'ENV' > bloomwatch/.env
+VITE_FIREBASE_API_KEY=${{ secrets.VITE_FIREBASE_API_KEY }}
+VITE_FIREBASE_AUTH_DOMAIN=${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
+VITE_FIREBASE_PROJECT_ID=${{ secrets.VITE_FIREBASE_PROJECT_ID }}
+VITE_FIREBASE_APP_ID=${{ secrets.VITE_FIREBASE_APP_ID }}
+ENV
+          else
+            echo "Firebase secrets not provided; skipping .env recreation." >&2
+          fi
+
+      - name: Create BloomWatch bundle
+        run: |
+          rm -f bloomwatch.zip
+          zip -r bloomwatch.zip bloomwatch -x 'bloomwatch/node_modules/*' 'bloomwatch/dist/*'
+
+      - name: Upload BloomWatch Bundle
+        uses: actions/upload-artifact@v3
+        with:
+          name: bloomwatch-bundle
+          path: bloomwatch.zip
