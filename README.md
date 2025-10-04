@@ -59,3 +59,22 @@ The goal of this project is to build a predictive model to determine whether a l
 
 ## Access the Code
 [code](https://github.com/majdfo/Big-Data-Project/blob/main/code.ipynb).
+
+---
+
+## BloomWatch Archive
+
+For convenience, the React/Firebase prototype requested in this project is exported as `bloomwatch.zip` at the repository root. The archive is generated from the `bloomwatch/` directory and includes the configured `.env` file provided by the requester, so it remains gitignored and should be regenerated locally whenever updates are made to the app.
+
+### Automated Artifact
+
+A GitHub Actions workflow (`.github/workflows/upload-bloomwatch-bundle.yml`) zips the `bloomwatch/` directory and uploads it as the `bloomwatch-bundle` artifact whenever the app or workflow definition changes, or when triggered manually. To ensure the generated archive includes a populated `.env`, define the following repository secrets before running the workflow:
+
+- `VITE_FIREBASE_API_KEY`
+- `VITE_FIREBASE_AUTH_DOMAIN`
+- `VITE_FIREBASE_PROJECT_ID`
+- `VITE_FIREBASE_APP_ID`
+
+If the secrets are omitted, the workflow still produces an archive, but it will not contain the Firebase environment file. After the workflow finishes, download the artifact from the corresponding workflow run summary in GitHub Actions.
+
+To download the package directly from the execution environment, use the sandbox artifact link exposed by the automation workflow (for example: `sandbox:/workspace/Big-Data-Project/bloomwatch.zip`).
